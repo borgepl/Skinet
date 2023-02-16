@@ -6,7 +6,7 @@ import { TestErrorsComponent } from './core/test-errors/test-errors.component';
 import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: HomeComponent, data: {breadcrumb: 'Home'}},
   {path: 'test-error', component: TestErrorsComponent},
   {path: 'not-found', component: NotFoundComponent},
   {path: 'server-error', component: ServerErrorComponent},
