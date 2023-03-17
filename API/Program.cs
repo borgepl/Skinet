@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 // Our own Services Extention
 builder.Services.AddMyAppServices(builder.Configuration);
+builder.Services.AddMyIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
