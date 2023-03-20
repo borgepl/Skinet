@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Dtos;
 using API.Errors;
 using Core.Entities.Identity;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,8 +15,11 @@ namespace API.Controllers
     {
         private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
-        public AccountController( UserManager<AppUser> userManager, SignInManager<AppUser> signInManager )
+        private readonly ITokenService tokenService;
+        public AccountController( UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
+                                    ITokenService tokenService )
         {
+            this.tokenService = tokenService;
             this.signInManager = signInManager;
             this.userManager = userManager;
         }
@@ -31,11 +35,13 @@ namespace API.Controllers
 
             if (!result.Succeeded) return Unauthorized(new ApiException(401));
 
+            var token = tokenService.CreateToken(user);
+
             return new UserDto
             {
                 Email = user.Email,
                 Displayname = user.DisplayName,
-                Token = "This will be the token"
+                Token = token
             };
         }
 
@@ -53,11 +59,13 @@ namespace API.Controllers
 
             if (!result.Succeeded) return BadRequest(new ApiException(400));
 
+            var token = tokenService.CreateToken(user);
+
             return new UserDto
             {
                 Email = user.Email,
                 Displayname = user.DisplayName,
-                Token = "ABC"
+                Token = token
             };
         }
 

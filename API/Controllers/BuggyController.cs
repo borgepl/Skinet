@@ -15,7 +15,7 @@ namespace API.Controllers
         }
 
         [Authorize]
-        [HttpGet("auth")]
+        [HttpGet("testauth")]
         public ActionResult<string> GetSecret() 
         {
             return "secret text";
