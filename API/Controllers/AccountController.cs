@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Dtos;
 using API.Errors;
+using API.Extensions;
 using Core.Entities.Identity;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -22,6 +26,42 @@ namespace API.Controllers
             this.tokenService = tokenService;
             this.signInManager = signInManager;
             this.userManager = userManager;
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            //var email = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+
+            var user = await userManager.FindByEmailAsync(email);
+
+             return new UserDto
+            {
+                Email = user.Email,
+                Displayname = user.DisplayName,
+                Token = tokenService.CreateToken(user)
+            };
+
+        } 
+
+        [HttpGet("emailexists")]
+        public async Task<ActionResult<bool>> CheckEmailExistsAsync([FromQuery] string email)
+        {
+            return await userManager.FindByEmailAsync(email) != null;
+        }
+
+        [Authorize]
+        [HttpGet("address")]
+        public async Task<ActionResult<Address>> GetUserAddressAsync()
+        {
+            // var email = User.FindFirstValue(ClaimTypes.Email);
+            // var user = await userManager.Users.Include(x => x.Address).FirstOrDefaultAsync(x => x.Email == email);
+            var user = await userManager.FindUserByClaimsPrincipalWithAddress(User);
+
+            return user.Address;
+
         }
 
         [HttpPost("login")]
@@ -68,6 +108,7 @@ namespace API.Controllers
                 Token = token
             };
         }
+
 
     }
 
