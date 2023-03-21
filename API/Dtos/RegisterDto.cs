@@ -1,9 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace API.Dtos
 {
     public class RegisterDto
     {
+        [Required]
+        [MinLength(2)]
         public string DisplayName { get; set; }
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+        [Required]
+        // https://regexlib.com/Search.aspx?k=password 
+        [RegularExpression("(?=^.{6,10}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\\s).*$"
+            , ErrorMessage = "The password must have 1 Uppercase, 1 Lowercase, 1 number, 1 non-alphanumeric and at least 6 characters")]
         public string Password { get; set; }
     }
 }
