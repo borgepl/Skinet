@@ -9,13 +9,12 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddSwaggerGen();
+
 // Our own Services Extention
 builder.Services.AddMyAppServices(builder.Configuration);
 builder.Services.AddMyIdentityServices(builder.Configuration);
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
@@ -25,8 +24,7 @@ app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+   app.UseSwaggerDocumentation();
 }
 
 // app.UseHttpsRedirection();
