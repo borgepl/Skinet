@@ -1,22 +1,48 @@
-<div class="d-flex justify-content-center mt-5">
-  <div class="col-3">
-    <form>
-      <div class="text-center mb-4">
-        <h3 class="mb-3">Login to Shop</h3>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="floatingInput" placeholder="Email">
-        <label for="floatingInput">Email address</label>
-      </div>
-      <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-        <label for="floatingPassword">Password</label>
-      </div>
-      <div class="d-grid">
-        <button class="btn btn-lg btn-primary mt-3" type="submit">
-          Sign In
-        </button>
-      </div>
-    </form>
-  </div>
+<div class="container-fluid m-auto p-lg-5">
+
+
+<div class="d-flex justify-content-center pb-2">
+		<div class="card mt-5 mb-0">
+			<div class="card-header">
+				<h3>Sign In</h3>
+				<div class="d-flex justify-content-end social_icon">
+					<span><i class="fa fa-facebook-square"></i></span>
+					<span><i class="fa fa-google-plus-square"></i></span>
+					<span><i class="fa fa-twitter-square"></i></span>
+				</div>
+			</div>
+			<div class="card-body">
+				<form>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-2x fa-user"></i></span>
+						</div>
+						<input type="text" class="form-control" placeholder="email">
+
+					</div>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-2x fa-key"></i></span>
+						</div>
+						<input type="password" class="form-control" placeholder="password">
+					</div>
+					<div class="row align-items-center remember">
+						<input type="checkbox">Remember Me
+					</div>
+					<div class="d-flex justify-content-end mt-3 me-3">
+						<input type="submit" value="Login" class="btn login_btn">
+					</div>
+				</form>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex justify-content-center links">
+					Don't have an account?<a class="footer-text" href="#">Sign Up</a>
+				</div>
+				<div class="d-flex justify-content-center mt-2 mb-4">
+					<a class="footer-text" href="#">Forgot your password?</a>
+				</div>
+			</div>
+		</div>
+</div>
+
 </div>
