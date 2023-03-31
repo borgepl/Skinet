@@ -21,7 +21,8 @@
   .social_icon span{
   font-size: 60px;
   margin-left: 10px;
-  color: #FFC312;
+  // color: #FFC312;
+  color: orange
   }
 
   .social_icon span:hover{
@@ -41,7 +42,8 @@
 
   .input-group-prepend span{
   width: 50px;
-  background-color: #FFC312;
+  background-color: orange;
+  // background-color: #FFC312;
   color: black;
   border:0;
   }
@@ -53,7 +55,7 @@
   }
 
   .remember{
-  color: white;
+    color: white;
   }
 
   .remember input
@@ -66,7 +68,8 @@
 
   .login_btn{
   color: black;
-  background-color: #FFC312;
+  // background-color: #FFC312;
+  background-color: orange;
   width: 100px;
   }
 
