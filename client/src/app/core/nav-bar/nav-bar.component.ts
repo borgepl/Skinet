@@ -9,6 +9,9 @@ import { BasketItem } from 'src/app/shared/models/basket';
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent {
+logout() {
+throw new Error('Method not implemented.');
+}
 
   constructor ( public basketService: BasketService, public accountService: AccountService) {}
 

@@ -16,10 +16,21 @@ a {
 
   &.active {
     color: orange;
+    font-weight: bold;
   }
 }
 
 .logo {
   max-height: 70px;
   cursor: pointer;
+}
+
+.welcome {
+  font-size: larger;
+}
+
+.dropdown-item:hover {
+  color: orange;
+  background-color: black;
+  font-style: italic;
 }
