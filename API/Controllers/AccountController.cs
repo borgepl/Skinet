@@ -133,6 +133,61 @@ namespace API.Controllers
         }
 
 
+        /// Google Login 
+
+        [AllowAnonymous]
+        [HttpGet("GoogleLogin")]
+        public IActionResult GoogleLogin()
+        {
+            string redirectUrl = Url.Action("GoogleResponse", "Account");
+            var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            return new ChallengeResult("Google", properties);
+        }
+ 
+        [AllowAnonymous]
+        [HttpGet("GoogleResponse")]
+        public async Task<ActionResult<UserDto>> GoogleResponse()
+        {
+            ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction(nameof(Login));
+ 
+           
+            //var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            
+            string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
+            
+            //if (!result.Succeeded) return BadRequest(new ApiException(400));
+
+            
+                var user = new AppUser
+                {
+                DisplayName = info.Principal.FindFirst(ClaimTypes.Name).Value,
+                Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
+                };
+                
+                IdentityResult identResult = await userManager.CreateAsync(user);
+                if (identResult.Succeeded)
+                {
+                    identResult = await userManager.AddLoginAsync(user, info);
+                    if (identResult.Succeeded)
+                    {
+                        var token = tokenService.CreateToken(user);
+
+                        return new UserDto
+                        {
+                            Email = user.Email,
+                            Displayname = user.DisplayName,
+                            Token = token
+                        };
+                    }
+                }
+                return BadRequest(new ApiException(400));
+            
+        }
+
+
     }
 
 }

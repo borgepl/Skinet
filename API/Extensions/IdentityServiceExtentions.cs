@@ -17,13 +17,17 @@ namespace API.Extensions
                 opt.UseSqlite(config.GetConnectionString("IdentityConnection"));
             });
 
-            services.AddIdentityCore<AppUser>(opt => 
-            {
-                // add identity options here
-            })
-            .AddEntityFrameworkStores<AppIdentityDbContext>()
-            .AddSignInManager<SignInManager<AppUser>>();
+            // services.AddIdentityCore<AppUser>(opt => 
+            // {
+            //     // add identity options here
+            // })
+            // .AddEntityFrameworkStores<AppIdentityDbContext>()
 
+            services.AddIdentity<AppUser, IdentityRole>()
+            .AddEntityFrameworkStores<AppIdentityDbContext>()
+            .AddDefaultTokenProviders()
+            .AddSignInManager<SignInManager<AppUser>>();
+   
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt => 
                 {
@@ -35,7 +39,14 @@ namespace API.Extensions
                         ValidateIssuer = true,
                         ValidateAudience = false
                     };
-                });
+                })
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = config["Authentication:Google:ClientId"];
+                    googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"];
+                    googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+                })
+                ;
                 
             services.AddAuthorization();
 
