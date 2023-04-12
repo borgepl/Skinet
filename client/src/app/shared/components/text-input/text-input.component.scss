@@ -1,0 +1,16 @@
+.input-group-prepend {
+  display: flex;
+}
+
+.input-group-prepend span{
+  width: 50px;
+  background-color: #e95420;;
+  color: black;
+  border:0;
+  }
+
+  input:focus{
+  outline: 0 0 0 0;
+  box-shadow: 0 0 0 0;
+
+  }
