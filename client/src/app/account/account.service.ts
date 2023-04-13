@@ -1,5 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -14,7 +15,7 @@ export class AccountService {
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor( private http: HttpClient, private router: Router) { }
+  constructor( private http: HttpClient, private router: Router, @Inject(DOCUMENT) private document: Document) { }
 
   login(values: any) {
     return this.http.post<User>(this.baseUrl + 'account/login', values).pipe(
@@ -60,5 +61,19 @@ export class AccountService {
       })
     );
   }
+
+  googlelogin() {
+    return this.http.get<User>(this.baseUrl + 'account/googlelogin').pipe(
+      map(user => {
+        localStorage.setItem('token', user.token);
+        this.currentUserSource.next(user);
+        //return user;
+      })
+    );
+  }
+
+  loginToGoogle() {
+    this.document.location.href = this.baseUrl + 'account/googlelogin';
+}
 
 }

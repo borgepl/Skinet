@@ -9,6 +9,7 @@ using API.Extensions;
 using AutoMapper;
 using Core.Entities.Identity;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -153,7 +154,7 @@ namespace API.Controllers
                 return RedirectToAction(nameof(Login));
  
            
-            //var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
             
             string[] userInfo = { info.Principal.FindFirst(ClaimTypes.Name).Value, info.Principal.FindFirst(ClaimTypes.Email).Value };
             
@@ -173,17 +174,34 @@ namespace API.Controllers
                     identResult = await userManager.AddLoginAsync(user, info);
                     if (identResult.Succeeded)
                     {
+                        await signInManager.SignInAsync(user, isPersistent: false);
+                        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
                         var token = tokenService.CreateToken(user);
 
-                        return new UserDto
-                        {
-                            Email = user.Email,
-                            Displayname = user.DisplayName,
-                            Token = token
-                        };
+                        // return new UserDto
+                        // {
+                        //     Email = user.Email,
+                        //     Displayname = user.DisplayName,
+                        //     Token = token
+                        // };
+
+                        return Redirect("https://localhost:4200/shop"); 
                     }
                 }
-                return BadRequest(new ApiException(400));
+                else 
+                {
+                     var token = tokenService.CreateToken(user);
+
+                        // return new UserDto
+                        // {
+                        //     Email = user.Email,
+                        //     Displayname = user.DisplayName,
+                        //     Token = token
+                        // };
+
+                        return Redirect("https://localhost:4200/shop"); 
+                }
+                return BadRequest( new ApiException(400,"Unknow error"));
             
         }
 
