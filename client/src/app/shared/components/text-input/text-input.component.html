@@ -23,4 +23,7 @@ placeholder={{label}}>
 <div class="invalid-feedback" *ngIf="control.errors?.['notMatching']">
   Passwords do not match
 </div>
+<div class="invalid-feedback" *ngIf="control.errors?.['pattern']">
+  Password not complex enough
+</div>
 </div>

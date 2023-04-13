@@ -1,1 +1,37 @@
-<p>register works!</p>
+<div class="container-fluid m-auto p-lg-5">
+
+
+  <div class="d-flex justify-content-center pb-2">
+      <div class="card mt-5 mb-0">
+        <div class="card-header">
+          <h3> - </h3>
+          <div class="d-flex justify-content-end social_icon">
+            <span><i class="fa fa-facebook-square"></i></span>
+            <span><i class="fa fa-google-plus-square"></i></span>
+            <span><i class="fa fa-twitter-square"></i></span>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+              <app-text-input [formControl]="registerForm.controls['displayName']" [label]="'Display Name'">
+              </app-text-input>
+
+              <app-text-input [formControl]="registerForm.controls['email']" [type]="'email'" [label]="'Email address'">
+              </app-text-input>
+
+              <app-text-input [formControl]="registerForm.controls['password']" [type]="'password'"
+                [label]="'Password'" [faicon]="'fa-lock'">
+              </app-text-input>
+
+            <div class="d-flex justify-content-end mt-3 me-3">
+              <input [disabled]="registerForm.invalid" type="submit" value="Register" class="btn login_btn">
+            </div>
+          </form>
+        </div>
+
+      </div>
+  </div>
+
+  </div>
+
