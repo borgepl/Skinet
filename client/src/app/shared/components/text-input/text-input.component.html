@@ -8,6 +8,8 @@ type={{type}}
 class="form-control"
 [formControl]="control"
 placeholder={{label}}>
+<div *ngIf="control.status === 'PENDING'" class="fa fa-spinner fa-spin loader"></div>
+
 <div class="invalid-feedback" *ngIf="control.errors?.['required']">
   Please enter a correct {{label}}
 </div>
@@ -25,5 +27,8 @@ placeholder={{label}}>
 </div>
 <div class="invalid-feedback" *ngIf="control.errors?.['pattern']">
   Password not complex enough
+</div>
+<div class="invalid-feedback" *ngIf="control.errors?.['emailExists']">
+  This email address is already taken
 </div>
 </div>

@@ -24,6 +24,11 @@
                 [label]="'Password'" [faicon]="'fa-lock'">
               </app-text-input>
 
+              <ul class="text-danger list-unstyled" *ngIf="errors">
+                <li *ngFor="let error of errors">{{error}}</li>
+                <li>Error</li>
+              </ul>
+
             <div class="d-flex justify-content-end mt-3 me-3">
               <input [disabled]="registerForm.invalid" type="submit" value="Register" class="btn login_btn">
             </div>
