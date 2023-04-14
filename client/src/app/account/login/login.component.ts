@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../account.service';
 
 import { SocialAuthService } from "@abacritt/angularx-social-login";
@@ -22,7 +22,12 @@ export class LoginComponent implements OnInit {
     rememberMe: new FormControl(false)
   });
 
-  constructor( private accountService: AccountService, private router: Router, private authService: SocialAuthService) {}
+  returnUrl: string;
+
+  constructor( private accountService: AccountService, private router: Router,
+    private authService: SocialAuthService, private activatedRoute: ActivatedRoute) {
+      this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/shop'
+    }
 
   ngOnInit(): void {
 
@@ -31,7 +36,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     console.log(this.loginForm.value);
     this.accountService.login(this.loginForm.value).subscribe({
-      next: () => this.router.navigateByUrl('/shop')
+      next: () => this.router.navigateByUrl(this.returnUrl)
 
     });
 
