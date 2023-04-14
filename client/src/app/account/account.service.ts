@@ -12,7 +12,7 @@ import { User } from '../shared/models/user';
 export class AccountService {
 
   baseUrl = environment.apiUrl;
-  private currentUserSource = new ReplaySubject<User | null>(1);
+  private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
   constructor( private http: HttpClient, private router: Router, @Inject(DOCUMENT) private document: Document) { }
@@ -50,11 +50,8 @@ export class AccountService {
     return this.http.get<User>(this.baseUrl + 'account');
   }
 
-  loadCurrentUser(token: string | null) {
-    if (token === null) {
-      this.currentUserSource.next(null);
-      return of(null);
-    }
+  loadCurrentUser(token: string) {
+
 
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${token}`);
@@ -64,9 +61,7 @@ export class AccountService {
         if (user) {
           localStorage.setItem('token', user.token);
           this.currentUserSource.next(user);
-          return user;
-        } else {
-          return null;
+
         }
 
       })
