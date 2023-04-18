@@ -17,15 +17,16 @@ namespace API.Extensions
                 opt.UseSqlite(config.GetConnectionString("IdentityConnection"));
             });
 
-            // services.AddIdentityCore<AppUser>(opt => 
-            // {
-            //     // add identity options here
-            // })
-            // .AddEntityFrameworkStores<AppIdentityDbContext>()
-
-            services.AddIdentity<AppUser, IdentityRole>()
+            services.AddIdentityCore<AppUser>(opt => 
+            {
+                // add identity options here
+            })
+            
             .AddEntityFrameworkStores<AppIdentityDbContext>()
-            .AddDefaultTokenProviders()
+
+            // services.AddIdentity<AppUser, IdentityRole>()
+            // .AddEntityFrameworkStores<AppIdentityDbContext>()
+            //.AddDefaultTokenProviders()
             .AddSignInManager<SignInManager<AppUser>>();
    
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -40,12 +41,12 @@ namespace API.Extensions
                         ValidateAudience = false
                     };
                 })
-                .AddGoogle(googleOptions =>
-                {
-                    googleOptions.ClientId = config["Authentication:Google:ClientId"];
-                    googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"];
-                    googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
-                })
+                // .AddGoogle(googleOptions =>
+                // {
+                //     googleOptions.ClientId = config["Authentication:Google:ClientId"];
+                //     googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"];
+                //     googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+                // })
                 ;
                 
             services.AddAuthorization();
