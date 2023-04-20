@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../account.service';
 
-import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { GoogleLoginProvider, SocialAuthService } from "@abacritt/angularx-social-login";
 import { SocialUser } from "@abacritt/angularx-social-login";
 
 @Component({
@@ -43,10 +43,16 @@ export class LoginComponent implements OnInit {
   }
 
   loginToGoogle() {
+
+    //this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+
+    //this.authService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID);
+
     this.authService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
       console.log(this.user.name + ' ' + this.user.email + ' - ' + this.loggedIn);
+      console.log(this.user.authToken + ' - ' + this.user.idToken + ' - ' + this.user.provider);
 
     });
   }

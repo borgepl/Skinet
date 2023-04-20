@@ -5,7 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { AcountRoutingModule } from './acount-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
-import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider
@@ -20,6 +20,10 @@ import {
     CommonModule,
     AcountRoutingModule,
     SharedModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule
+  ],
+  exports: [
     SocialLoginModule
   ],
   providers: [
