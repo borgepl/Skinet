@@ -1,1 +1,26 @@
-<p>checkout-address works!</p>
+<div class="mt-4" *ngIf="checkoutForm" [formGroup]="checkoutForm">
+  <div class="d-flex justify-content-between align-items-center">
+    <h4>Shipping Address</h4>
+    <button class="btn btn-outline-success mb-3">Save as default address</button>
+  </div>
+  <div class="row" formGroupName="addressForm">
+    <div class="form-group col-6">
+      <app-text-input [label]="'First name'" formControlName="firstName"></app-text-input>
+    </div>
+    <div class="form-group col-6">
+      <app-text-input [label]="'Last name'" formControlName="lastName"></app-text-input>
+    </div>
+    <div class="form-group col-6">
+      <app-text-input [label]="'Street'" [faicon]="'fa-home'" formControlName="street"></app-text-input>
+    </div>
+    <div class="form-group col-6">
+      <app-text-input [label]="'City'" [faicon]="'fa-building'" formControlName="city"></app-text-input>
+    </div>
+    <div class="form-group col-6">
+      <app-text-input [label]="'State'" [faicon]="'fa-flag'" formControlName="state"></app-text-input>
+    </div>
+    <div class="form-group col-6">
+      <app-text-input [label]="'Zipcode'" [faicon]="'fa-bars'" formControlName="zipcode"></app-text-input>
+    </div>
+  </div>
+</div>
