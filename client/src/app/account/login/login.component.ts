@@ -53,7 +53,9 @@ export class LoginComponent implements OnInit {
       this.loggedIn = (user != null);
       console.log(this.user.name + ' ' + this.user.email + ' - ' + this.loggedIn);
       console.log(this.user.authToken + ' - ' + this.user.idToken + ' - ' + this.user.provider);
-
+      this.accountService.loginWithGoogle(user).subscribe({
+        next: () => this.router.navigateByUrl('/shop')
+      })
     });
   }
 

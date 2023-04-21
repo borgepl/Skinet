@@ -133,8 +133,47 @@ namespace API.Controllers
             };
         }
 
+        // Login to Google - call from client app
+        [HttpPost("logingoogle")]
+         public async Task<ActionResult<UserDto>> LoginWithGoogle(SocialUserDto socialUser)
+        {
+            if (CheckEmailExistsAsync(socialUser.email).Result.Value)
+            {
+                var usertoReturn = await userManager.FindByEmailAsync(socialUser.email);
+                
+                var tokentoReturn = tokenService.CreateToken(usertoReturn);
 
-        /// Google Login 
+                return new UserDto
+                {
+                    Email = usertoReturn.Email,
+                    Displayname = usertoReturn.DisplayName,
+                    Token = tokentoReturn
+                };
+
+            }
+
+            var user = new AppUser
+            {
+                DisplayName = socialUser.name,
+                Email = socialUser.email,
+                UserName = socialUser.email
+            };
+
+            var result = await userManager.CreateAsync(user);
+
+            if (!result.Succeeded) return BadRequest(new ApiException(400));
+
+            var token = tokenService.CreateToken(user);
+
+            return new UserDto
+            {
+                Email = user.Email,
+                Displayname = user.DisplayName,
+                Token = token
+            };
+        }
+
+        /// Google Login from API
 
         [AllowAnonymous]
         [HttpGet("GoogleLogin")]

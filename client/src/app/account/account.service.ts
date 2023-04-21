@@ -68,6 +68,15 @@ export class AccountService {
     );
   }
 
+  loginWithGoogle(values: any) {
+    return this.http.post<User>(this.baseUrl + 'account/logingoogle', values).pipe(
+      map(user => {
+        localStorage.setItem('token', user.token);
+        this.currentUserSource.next(user);
+      })
+    );
+  }
+
   googlelogin() {
     return this.http.get<User>(this.baseUrl + 'account/googlelogin').pipe(
       map(user => {
