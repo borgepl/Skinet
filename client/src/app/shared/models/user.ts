@@ -9,8 +9,8 @@ export interface User {
 export interface Address {
   firstName: string;
   lastName: string,
-  street: String;
+  street: string;
   city: string,
   state: string;
-  zipCode: string;
+  zipcode: string;
 }
