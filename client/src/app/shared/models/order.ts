@@ -24,6 +24,6 @@ export interface OrderItem {
 export interface OrderToCreate {
   basketId: string
   deliveryMethodId: number
-  shiPToAddress: Address
+  shipToAddress: Address
 
 }
