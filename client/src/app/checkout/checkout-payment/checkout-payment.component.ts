@@ -85,6 +85,9 @@ export class CheckoutPaymentComponent implements OnInit {
             const navigationExtras: NavigationExtras = {state: order};
             this.router.navigate(['checkout/success'], navigationExtras);
           }
+          else {
+            this.toastr.error(result.error.message);
+          }
         })
       }
     })
@@ -99,6 +102,36 @@ export class CheckoutPaymentComponent implements OnInit {
       deliveryMethodId: deliveryMethodId,
       shipToAddress: shipToAddress
     }
+  }
+
+  submitOrderBancontact() {
+    const basket = this.basketService.getCurrentBasketValue();
+    if (!basket) return;
+    const orderToCreate = this.getOrderToCreate(basket);
+    if (!orderToCreate) return;
+    this.checkoutService.createOrder(orderToCreate).subscribe({
+      next: order => {
+        this.toastr.success("Order created successfully");
+
+        this.stripe?.confirmBancontactPayment(basket.clientSecret!, {
+          payment_method : {
+            billing_details: {
+              name: this.checkoutForm?.get('paymentForm')?.get('nameOnCard')?.value
+            }
+          },
+          return_url: 'https://localhost:4200/checkout'
+        }).then(result => {
+          console.log(result);
+          if (result.paymentIntent?.status === 'succeeded') {
+
+            this.basketService.deleteLocalBasket();
+            console.log(order);
+            const navigationExtras: NavigationExtras = {state: order};
+            this.router.navigate(['checkout/success'], navigationExtras);
+          }
+        })
+      }
+    })
   }
 
 }

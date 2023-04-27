@@ -55,7 +55,7 @@ namespace Infrastructure.Services
                 {
                     Amount = (long) basket.Items.Sum(i => i.Quantity * (i.Price * 100)) + (long) shippingPrice * 100,
                     Currency = "eur",
-                    PaymentMethodTypes = new List<string> {"card"}
+                    PaymentMethodTypes = new List<string> {"card","bancontact"}
                 };
                 
                 intent = await service.CreateAsync(options);
