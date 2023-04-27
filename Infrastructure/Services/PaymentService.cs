@@ -27,6 +27,9 @@ namespace Infrastructure.Services
             StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
 
             var basket = await basketRepository.GetBasketAsync(basketId);
+
+            if (basket == null) return null;
+
             var shippingPrice = 0m;
 
             if (basket.DeliveryMethodId.HasValue)
