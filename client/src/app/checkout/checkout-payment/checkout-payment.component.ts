@@ -6,7 +6,7 @@ import { BasketService } from 'src/app/basket/basket.service';
 import { Basket } from 'src/app/shared/models/basket';
 import { Address } from 'src/app/shared/models/user';
 import { CheckoutService } from '../checkout.service';
-import { Stripe, StripeCardCvcElement, StripeCardExpiryElement, StripeCardNumberElement, loadStripe } from '@stripe/stripe-js';
+import { PaymentIntent, Stripe, StripeCardCvcElement, StripeCardExpiryElement, StripeCardNumberElement, loadStripe } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
 import { OrderToCreate } from 'src/app/shared/models/order';
 
@@ -29,6 +29,7 @@ export class CheckoutPaymentComponent implements OnInit {
   cardCvc?: StripeCardCvcElement;
   cardErrors: any;
   loading = false;
+
 
   constructor( private basketService: BasketService, private checkoutService: CheckoutService,
       private toastr: ToastrService, private router: Router) {}
@@ -119,34 +120,50 @@ export class CheckoutPaymentComponent implements OnInit {
     }
   }
 
-  submitOrderBancontact() {
+   async submitOrderBancontact() {
+
+    this.loading = true;
     const basket = this.basketService.getCurrentBasketValue();
-    if (!basket) return;
-    const orderToCreate = this.getOrderToCreate(basket);
-    if (!orderToCreate) return;
-    this.checkoutService.createOrder(orderToCreate).subscribe({
-      next: order => {
-        this.toastr.success("Order created successfully");
-
-        this.stripe?.confirmBancontactPayment(basket.clientSecret!, {
-          payment_method : {
-            billing_details: {
-              name: this.checkoutForm?.get('paymentForm')?.get('nameOnCard')?.value
-            }
-          },
-          return_url: 'https://localhost:4200/checkout'
-        }).then(result => {
-          console.log(result);
-          if (result.paymentIntent?.status === 'succeeded') {
-
-            this.basketService.deleteLocalBasket();
-            console.log(order);
-            const navigationExtras: NavigationExtras = {state: order};
-            this.router.navigate(['checkout/success'], navigationExtras);
-          }
-        })
+    try {
+      const createdOrder = await this.createOrder(basket);
+      const paymentResult = await this.confirmBancontactPaymentWithStripe(basket);
+      if (paymentResult.paymentIntent) {
+        if (paymentResult.paymentIntent.status == 'succeeded') {
+          this.basketService.deleteLocalBasket();
+          const navigationExtras: NavigationExtras = {state: createdOrder};
+          this.router.navigate(['checkout/success'], navigationExtras);
+        }
+      } else {
+        this.toastr.error(paymentResult.error.message);
       }
-    })
+    } catch (error: any) {
+      console.log(error);
+      this.toastr.error(error.message);
+    } finally {
+      this.loading = false;
+    }
+
+  }
+  private async confirmBancontactPaymentWithStripe(basket: Basket | null) {
+    if (!basket) throw new Error('Basket is null!');
+    const paymentIntent = await this.stripe?.retrievePaymentIntent(basket.clientSecret!)
+    if (paymentIntent?.paymentIntent?.status == 'requires_action'
+      && paymentIntent.paymentIntent.next_action?.redirect_to_url)
+    {
+      console.log(paymentIntent);
+
+    }
+
+    const result =  this.stripe?.confirmBancontactPayment(basket.clientSecret!, {
+      payment_method : {
+        billing_details: {
+          name: this.checkoutForm?.get('paymentForm')?.get('nameOnCard')?.value
+        }
+      },
+      return_url: 'https://localhost:4200/checkout/success'
+    });
+    if (!result) throw new Error('Problem attempting payment with stripe');
+    return result;
   }
 
 }
