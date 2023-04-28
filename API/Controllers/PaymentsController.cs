@@ -54,14 +54,18 @@ namespace API.Controllers
                         paymentIntent = (PaymentIntent) stripeEvent.Data.Object;
                         logger.LogInformation("Payment succeeded: ", paymentIntent.Id);
                         
-                        // TODO update the order with the new status
+                        // update the order with the new status
+                        order = await paymentService.UpdateOrderPaymentSucceeded(paymentIntent.Id);
+                        logger.LogInformation("Order updated to Payment Received: ", order.Id);
                         break;
 
                     case "payment_intent.payment_failed":
                         paymentIntent = (PaymentIntent) stripeEvent.Data.Object;
                         logger.LogInformation("Payment failed: ", paymentIntent.Id);
                         
-                        // TODO update the order with the new status
+                        //  update the order with the new status
+                         order = await paymentService.UpdateOrderPaymentFailed(paymentIntent.Id);
+                        logger.LogInformation("Order updated to Payment Failed: ", order.Id);
                         break;
 
                 }
