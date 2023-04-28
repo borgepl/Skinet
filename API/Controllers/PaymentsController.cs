@@ -11,7 +11,7 @@ namespace API.Controllers
     public class PaymentsController : BaseApiController
     {
          // This is your Stripe CLI webhook secret for testing your endpoint locally.
-        private const string endpointSecret = "whsec_";
+        private const string endpointSecret = "whsec_f295ec462800f30f1b29c1aae36fc7f0d109f4ed57b2564b79026a79e3b95e91";
         private readonly ILogger<PaymentsController> logger;
 
         private readonly IPaymentService paymentService;
@@ -32,16 +32,16 @@ namespace API.Controllers
             return basket;
         }
 
-        [HttpPost]
+        [AllowAnonymous]
+        [HttpPost("webhook")]
         public async Task<ActionResult> StripeWebhook()
         {
              
             var json = await new StreamReader(Request.Body).ReadToEndAsync();
 
-             try
-            {
+            
                 var stripeEvent = EventUtility.ConstructEvent(json,
-                    Request.Headers["Stripe-Signature"], endpointSecret);
+                    Request.Headers["Stripe-Signature"], endpointSecret, throwOnApiVersionMismatch:false);
 
                 PaymentIntent paymentIntent;
                 Order order;
@@ -71,11 +71,7 @@ namespace API.Controllers
                 }
 
                 return new EmptyResult();
-            }
-            catch (StripeException)
-            {
-                return BadRequest();
-            }
+           
         }
     }
 }
