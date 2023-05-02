@@ -9,6 +9,7 @@ import { CheckoutService } from '../checkout.service';
 import { PaymentIntent, Stripe, StripeCardCvcElement, StripeCardExpiryElement, StripeCardNumberElement, loadStripe } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
 import { OrderToCreate } from 'src/app/shared/models/order';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-checkout-payment',
@@ -36,7 +37,6 @@ export class CheckoutPaymentComponent implements OnInit {
   cardErrors: any;
 
   loading = false;
-
 
   constructor( private basketService: BasketService, private checkoutService: CheckoutService,
       private toastr: ToastrService, private router: Router) {}
