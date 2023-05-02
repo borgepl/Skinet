@@ -11,14 +11,17 @@ namespace API.Controllers
     public class PaymentsController : BaseApiController
     {
          // This is your Stripe CLI webhook secret for testing your endpoint locally.
-        private const string endpointSecret = "whsec_f295ec462800f30f1b29c1aae36fc7f0d109f4ed57b2564b79026a79e3b95e91";
+        private readonly string endpointSecret;
         private readonly ILogger<PaymentsController> logger;
+        private readonly IConfiguration config;
 
         private readonly IPaymentService paymentService;
-        public PaymentsController( IPaymentService paymentService, ILogger<PaymentsController> logger)
+        public PaymentsController( IPaymentService paymentService, ILogger<PaymentsController> logger, IConfiguration config)
         {
+            this.config = config;
             this.logger = logger;
             this.paymentService = paymentService;
+            endpointSecret = config.GetSection("StripeSettings:WhSecret").Value;
         }
 
         [Authorize]
